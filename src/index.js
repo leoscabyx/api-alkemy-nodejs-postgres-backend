@@ -1,5 +1,9 @@
 import app from "./app.js";
 import { sequelize } from "./database/database.js";
+import dotenv  from "dotenv"
+
+dotenv.config()
+
 
 // import "./models/Personaje.js";
 // import "./models/Movie.js";
