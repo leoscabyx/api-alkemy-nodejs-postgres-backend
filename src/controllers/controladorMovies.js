@@ -27,7 +27,7 @@ async function getMoviesAll (req, res) {
             }
 
             if (filter === "genre") {
-                const [ results ] =  await sequelize.query(`select * from Movie_Genero where GeneroId = ${dato}`);
+                const [ results ] =  await sequelize.query(`select * from "Movie_Genero" as mg where mg."GeneroId" = ${dato}`);
                 
                 if (results.length === 0) {
                     return res.json({ error: "No se han encontrado las peliculas o series" })

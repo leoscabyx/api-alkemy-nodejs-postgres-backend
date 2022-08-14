@@ -103,7 +103,7 @@ async function addMovieToGenero (req, res) {
         const id = parseInt(req.params.id)
         const idMovie = parseInt(req.params.idMovie)
 
-        const [ results ] =  await sequelize.query(`select * from Movie_Genero where MovieId = ${idMovie} and GeneroId = ${id}`);
+        const [ results ] =  await sequelize.query(`select * from "Movie_Genero" as mg where mg."MovieId" = ${idMovie} and mg."GeneroId" = ${id}`);
         
         const [ genero_movie ] = results
         
