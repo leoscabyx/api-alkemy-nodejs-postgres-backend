@@ -11,8 +11,8 @@ async function getPersonajesAll (req, res) {
         const dato = req.query[filter]
 
         if (filter) {
-            if (!(filter === "name" || filter === "age" || filter === "idmovie")) {
-                return res.json({ error: "El filtro solo acepta name, age o idmovie" })
+            if (!(filter === "name" || filter === "age" || filter === "movies")) {
+                return res.json({ error: "El filtro solo acepta name, age o movies" })
             }
 
             if (filter === "name") {
@@ -37,8 +37,8 @@ async function getPersonajesAll (req, res) {
                 return res.json(personajes)
             }
 
-            if (filter === "idmovie") {
-                const [ results ] =  await sequelize.query(`select * from Personaje_Movie where MovieId = ${dato}`);
+            if (filter === "movies") {
+                const [ results ] =  await sequelize.query(`select * from "Personaje_Movie" as pm where pm."MovieId" = ${dato}`);
                 
                 if (results.length === 0) {
                     return res.json({ error: "No se han encontrado personajes" })
@@ -155,10 +155,44 @@ async function deletePersonajes (req, res) {
     }
 }
 
+async function addMovieToCharacter (req, res) {
+    try {
+        const id = parseInt(req.params.id)
+        const idMovie = parseInt(req.params.idMovie)
+
+        const [ results ] =  await sequelize.query(`select * from "Personaje_Movie" as pm where pm."PersonajeId" = ${id} and pm."MovieId" = ${idMovie}`);
+
+        const [ personaje_movie ] = results
+        
+        if (personaje_movie) {
+            return res.json({ error: "Ya esta asociada esta pelicula a este personaje"})
+        }
+
+        const personaje = await Personaje.findByPk(id)
+        const movie = await Movie.findByPk(idMovie)
+    
+        if (!personaje) {
+            return res.json({ error: "No se ha encontrado el personaje"})
+        }
+    
+        if (!movie) {
+            return res.json({ error: "No se ha encontrado la pelicula o serie"})
+        }
+    
+        personaje.addMovies(movie)
+    
+        res.json(personaje)
+    } catch (error) {
+        console.log(error)
+        res.json(error)
+    }
+}
+
 export {
     getPersonajesAll,
     postPersonajes,
     getPersonajesById,
     updatePersonajes,
-    deletePersonajes
+    deletePersonajes,
+    addMovieToCharacter
 };
