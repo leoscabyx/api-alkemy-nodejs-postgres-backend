@@ -5,13 +5,13 @@ const tokenSign = async (user) => {
       {
         id: user.id
       },
-      process.env.SECRET || 'TOKENJWT'
+      process.env.SECRET
     );
 };
   
 const verifyToken = async (token) => {
     try {
-        return jwt.verify(token, process.env.SECRET || 'TOKENJWT');
+        return jwt.verify(token, process.env.SECRET);
     } catch (e) {
         return null;
     }
@@ -24,11 +24,12 @@ const authJWT = async (req, res, next) => {
         }
     
         const token = req.headers.authorization.split(" ").pop()
-    
+
         const dataToken = await verifyToken(token)
-    
-        if(!dataToken.id){
+        
+        if(!dataToken){
             res.json({ error: "Token id invalido"})
+            return
         }
   
         req.user = {
