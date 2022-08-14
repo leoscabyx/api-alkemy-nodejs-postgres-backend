@@ -16,4 +16,4 @@ const Genero = sequelize.define('Genero', {
   }
 });
 
-export default Genero
+export default Genero;

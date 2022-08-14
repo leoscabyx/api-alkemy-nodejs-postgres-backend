@@ -2,6 +2,8 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/database.js';
 
+import Genero from './Genero.js'
+
 const Movie = sequelize.define('Movie', {
   id: {
     type: DataTypes.INTEGER,
@@ -27,4 +29,7 @@ const Movie = sequelize.define('Movie', {
   }
 });
 
-export default Movie
+Movie.belongsToMany(Genero, { through: "Movie_Genero" });
+Genero.belongsToMany(Movie, { through: "Movie_Genero" });
+
+export default Movie;
