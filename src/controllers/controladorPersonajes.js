@@ -95,6 +95,12 @@ async function postPersonajes (req, res) {
             return res.json({ msg: "Debes pasar la imagen, nombre y edad, peso e historia como minimo para crear un personaje"})
         }
 
+        const personajeFound = await Personaje.findOne({ where: { nombre: campos.nombre } });
+        console.log("*******", personajeFound)
+        if(personajeFound) {
+            return res.json({ msg: "Ya existe el nombre de este personaje"})
+        }
+
         const personaje = await Personaje.create(campos)
         
         res.json(personaje)
